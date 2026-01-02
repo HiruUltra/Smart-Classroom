@@ -1,0 +1,13 @@
+{
+  "best_model": "rf",
+  "test_accuracy": 0.684,
+  "test_f1_weighted": 0.6693151348074654,
+  "n_train": 1000,
+  "n_test": 250,
+  "label_counts": {
+    "INCORRECT": 500,
+    "GOOD": 250,
+    "PARTIAL": 250,
+    "WEAK": 250
+  }
+}

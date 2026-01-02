@@ -1,0 +1,7 @@
+,value
+accuracy,0.5
+balanced_accuracy,0.5
+f1_macro,0.49259259259259264
+f1_weighted,0.49259259259259264
+precision_macro,0.537037037037037
+recall_macro,0.5
