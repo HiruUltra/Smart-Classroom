@@ -1,0 +1,8 @@
+timestamp,question_id,question_text,transcript,grade_level,grade_marks,coverage
+2026-01-02T12:52:44,Q4,What is the 'Von Neumann Architecture'?,it is a computer architecture designed that consists of a processing unit control unit memory input output mechanisms and a bassist,GOOD,10,0.8
+2026-01-02T13:06:28,Q4,What is the 'Von Neumann Architecture'?,it is a computer architecture designed that consists of a processing unit control unit memory input output mechanisms and a bassist,GOOD,10,0.8
+2026-01-02T13:07:15,Q28,What is the function of the 'Network Layer'?,it is responsible for determining the path routing and logical address ip address of the data that the data is connected to the system,PARTIAL,7,0.625
+2026-01-02T13:08:23,Q161,What is 'SRAM' (Static RAM)?,copy another error,NO_KEYWORDS_DEFINED,0,0.0
+2026-01-02T20:41:37,Q16,What is 'Fragmentation' in memory management?,framitation acer penoymon via smart 원 nettritt space is used in three suddenly reduced sin capacity or performance,INCORRECT,0,0.23529411764705882
+2026-01-02T20:43:31,Q11,What is a 'Flip-Flop' in digital circuits?,a pifflof easter circuit that has two stable status and can be used to store state information,WEAK,3,0.47619047619047616
+2026-01-02T20:47:01,Q21,What is 'Half-Duplex Mode'?,data can be transmitted in both directions but not at the same time,PARTIAL,7,0.625

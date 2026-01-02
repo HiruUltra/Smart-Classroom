@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>ICT Voice MCQ Tester</title>
+
+  <style>
+    /* =========================
+       THEME TOKENS (Light/Dark)
+       ========================= */
+    :root{
+      /* Accent */
+      --accent: #06B6D4;          /* Cyan */
+      --accent-hover: #0891B2;    /* Cyan Dark */
+      --grad-a: #22D3EE;          /* Cyan light */
+      --grad-b: #3B82F6;          /* Blue */
+      --highlight: #FACC15;       /* Yellow */
+      --success: #22C55E;
+      --warning: #F97316;
+
+      /* Light */
+      --bg: #FFFFFF;
+      --section: #F9FAFB;
+      --card: #FFFFFF;
+      --border: #E5E7EB;
+      --text: #111827;
+      --muted: #374151;
+
+      --shadow: 0 10px 30px rgba(9, 30, 66, .10);
+      --shadow-strong: 0 20px 50px rgba(0,0,0,.18);
+      --radius: 16px;
+      --radius-sm: 12px;
+
+      --transition: 300ms;
+    }
+
+    /* Dark Mode variables */
+    html.dark{
+      --bg: #000000;
+      --section: #111827;
+      --card: #1F2933;
+      --border: #374151;
+      --text: #FFFFFF;
+      --muted: #D1D5DB;
+
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --shadow-strong: 0 25px 60px rgba(0,0,0,.55);
+    }
+
+    /* Base */
+    * { box-sizing: border-box; }
+    body{
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: var(--bg);
+      color: var(--text);
+      transition: background var(--transition), color var(--transition);
+    }
+
+    /* Fancy gradient header line */
+    .topbar{
+      height: 5px;
+      background: linear-gradient(90deg, var(--grad-a), var(--grad-b));
+    }
+
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(0,0,0,0);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      transition: border-color var(--transition), background var(--transition);
+    }
+
+    .header-inner{
+      max-width: 1150px;
+      margin: 0 auto;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand{
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .logo{
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--grad-a), var(--grad-b));
+      box-shadow: var(--shadow);
+      display: grid;
+      place-items: center;
+      color: #001018;
+      font-weight: 900;
+      letter-spacing: .5px;
+      user-select: none;
+    }
+
+    .brand h1{
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.2;
+      letter-spacing: .2px;
+    }
+    .brand p{
+      margin: 4px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    main{
+      max-width: 1150px;
+      margin: 0 auto;
+      padding: 24px 18px 60px;
+    }
+
+    /* Section card */
+    .hero{
+      background: var(--section);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      transition: background var(--transition), border-color var(--transition);
+      overflow: hidden;
+      position: relative;
+      animation: slideInDown 420ms ease both;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: radial-gradient(600px 200px at 20% 0%, rgba(34,211,238,.20), transparent 60%),
+                  radial-gradient(500px 220px at 90% 40%, rgba(59,130,246,.18), transparent 60%);
+      pointer-events:none;
+    }
+
+    .controls{
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .controls-left{
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .controls-right{
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .status{
+      font-size: 12px;
+      color: var(--muted);
+      transition: color var(--transition);
+    }
+
+    /* Buttons */
+    button{
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      transition: transform 180ms ease, background var(--transition), border-color var(--transition), color var(--transition), box-shadow 200ms ease;
+    }
+
+    button:active{ transform: scale(.98); }
+
+    .btn-primary{
+      border: none;
+      background: var(--accent);
+      color: #001018;
+      box-shadow: 0 10px 25px rgba(6,182,212,.25);
+    }
+    .btn-primary:hover{ background: var(--accent-hover); transform: translateY(-1px) scale(1.02); }
+    .btn-primary:disabled{ opacity: .55; cursor: not-allowed; transform:none; }
+
+    .btn-ghost:hover{
+      background: rgba(6,182,212,.10);
+      border-color: rgba(6,182,212,.40);
+      transform: translateY(-1px) scale(1.02);
+    }
+
+    .btn-theme{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, rgba(34,211,238,.18), rgba(59,130,246,.16));
+      border-color: rgba(59,130,246,.35);
+    }
+    .btn-theme:hover{
+      transform: translateY(-1px) scale(1.02);
+      border-color: rgba(34,211,238,.65);
+    }
+
+    /* Grid */
+    .questions-grid{
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+      gap: 16px;
+    }
+    @media (min-width: 740px){
+      .questions-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (min-width: 1040px){
+      .questions-grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    /* Card */
+    .question-card{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 14px 12px;
+      box-shadow: var(--shadow);
+      transition: transform 220ms ease, box-shadow 220ms ease, background var(--transition), border-color var(--transition);
+      animation: slideInUp 420ms ease both;
+      position: relative;
+      overflow: hidden;
+    }
+    .question-card:hover{
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: var(--shadow-strong);
+      border-color: rgba(6,182,212,.35);
+    }
+
+    .question-header{
+      display:flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .chip{
+      font-size: 12px;
+      font-weight: 800;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(6,182,212,.35);
+      background: rgba(6,182,212,.12);
+      color: var(--text);
+      transition: background var(--transition), border-color var(--transition);
+    }
+
+    .hint{
+      font-size: 12px;
+      color: var(--muted);
+      transition: color var(--transition);
+    }
+
+    .question-text{
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--text);
+      margin-bottom: 10px;
+      transition: color var(--transition);
+    }
+
+    .audio-row{
+      display:flex;
+      gap:10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    /* Result panel */
+    .result{
+      display: none;
+      margin-top: 10px;
+      padding: 10px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,0);
+      transition: background var(--transition), border-color var(--transition), color var(--transition);
+      animation: fadeIn 240ms ease both;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* Badges */
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      border: 1px solid transparent;
+      letter-spacing: .2px;
+    }
+    .badge-good{ background: rgba(34,197,94,.14); color: var(--success); border-color: rgba(34,197,94,.35); }
+    .badge-partial{ background: rgba(250,204,21,.14); color: var(--highlight); border-color: rgba(250,204,21,.35); }
+    .badge-weak{ background: rgba(249,115,22,.14); color: var(--warning); border-color: rgba(249,115,22,.35); }
+    .badge-incorrect{ background: rgba(191,38,0,.14); color: #FF6B5B; border-color: rgba(191,38,0,.35); }
+    .badge-neutral{ background: rgba(59,130,246,.12); color: #9EC5FF; border-color: rgba(59,130,246,.30); }
+
+    .voice-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      border: 1px solid transparent;
+      margin-left: 6px;
+    }
+    .voice-confident{ background: rgba(34,197,94,.14); color: var(--success); border-color: rgba(34,197,94,.35); }
+    .voice-hesitant{ background: rgba(250,204,21,.14); color: var(--highlight); border-color: rgba(250,204,21,.35); }
+    .voice-nervous{ background: rgba(191,38,0,.14); color: #FF6B5B; border-color: rgba(191,38,0,.35); }
+
+    .small{ font-size: 12px; color: var(--muted); }
+
+    /* Animations */
+    @keyframes slideInUp{
+      from{ transform: translateY(12px); opacity: 0; }
+      to{ transform: translateY(0); opacity: 1; }
+    }
+    @keyframes slideInDown{
+      from{ transform: translateY(-10px); opacity: 0; }
+      to{ transform: translateY(0); opacity: 1; }
+    }
+    @keyframes fadeIn{
+      from{ opacity:0; transform: translateY(6px); }
+      to{ opacity:1; transform: translateY(0); }
+    }
+
+    /* Nice selection */
+    ::selection { background: rgba(6,182,212,.35); }
+  </style>
+</head>
+
+<body>
+  <div class="topbar"></div>
+
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="logo">AI</div>
+        <div>
+          <h1>ICT Short Answer – Voice Checker</h1>
+          <p>Generate questions, record your answer, get grade + voice pattern (Confident/Hesitant/Nervous).</p>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; align-items:center;">
+        <button id="btn-theme" class="btn-theme" title="Toggle light/dark">
+          🌗 <span id="theme-text">Dark</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="controls">
+        <div class="controls-left">
+          <button id="btn-load" class="btn-primary">✨ Generate 10 Questions</button>
+          <button id="btn-clear" class="btn-ghost">🧹 Clear All</button>
+          <span id="status" class="status"></span>
+        </div>
+
+        <div class="controls-right">
+          <span class="small">🎙️ One attempt per question</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="questions-container" class="questions-grid">
+      <!-- injected -->
+    </section>
+  </main>
+
+<script>
+  // Backend
+  const API_BASE_URL = "http://127.0.0.1:14764";
+
+  const btnLoad = document.getElementById("btn-load");
+  const btnClear = document.getElementById("btn-clear");
+  const statusEl = document.getElementById("status");
+  const container = document.getElementById("questions-container");
+
+  // Theme
+  const btnTheme = document.getElementById("btn-theme");
+  const themeText = document.getElementById("theme-text");
+
+  function applyTheme(mode){
+    const root = document.documentElement;
+    if(mode === "dark"){
+      root.classList.add("dark");
+      themeText.textContent = "Light";
+    }else{
+      root.classList.remove("dark");
+      themeText.textContent = "Dark";
+    }
+    localStorage.setItem("theme", mode);
+  }
+
+  // init theme (default dark? choose based on system)
+  const savedTheme = localStorage.getItem("theme");
+  if(savedTheme){
+    applyTheme(savedTheme);
+  }else{
+    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    applyTheme(prefersDark ? "dark" : "light");
+  }
+
+  btnTheme.addEventListener("click", () => {
+    const isDark = document.documentElement.classList.contains("dark");
+    applyTheme(isDark ? "light" : "dark");
+  });
+
+  // Recording globals
+  let mediaStream = null;
+  let mediaRecorder = null;
+  let recordedChunks = [];
+  let isRecording = false;
+  let currentRecordingCard = null;
+
+  btnLoad.addEventListener("click", loadQuestions);
+  btnClear.addEventListener("click", () => {
+    container.innerHTML = "";
+    statusEl.textContent = "";
+  });
+
+  async function loadQuestions() {
+    statusEl.textContent = "Loading questions...";
+    btnLoad.disabled = true;
+    container.innerHTML = "";
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/questions/random?count=10`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      renderQuestions(data.questions || []);
+      statusEl.textContent = `Loaded ${data.count || 0} questions.`;
+    } catch (err) {
+      console.error(err);
+      statusEl.textContent = "Failed to load questions. Check API.";
+    } finally {
+      btnLoad.disabled = false;
+    }
+  }
+
+  function renderQuestions(questions) {
+    container.innerHTML = "";
+
+    questions.forEach((q, idx) => {
+      const card = document.createElement("div");
+      card.className = "question-card";
+      card.dataset.questionId = q.question_id;
+
+      card.innerHTML = `
+        <div class="question-header">
+          <span class="chip">Q${idx + 1} • ID ${q.question_id || "-"}</span>
+          <span class="hint">One attempt</span>
+        </div>
+
+        <div class="question-text">${escapeHtml(q.question_text || "")}</div>
+
+        <div class="audio-row">
+          <button class="btn-primary btn-record">🎙️ Record & Check</button>
+        </div>
+
+        <div class="result"></div>
+      `;
+
+      const btnRecord = card.querySelector(".btn-record");
+      btnRecord.addEventListener("click", () => handleRecord(card));
+
+      container.appendChild(card);
+    });
+  }
+
+  // Prevent HTML injection
+  function escapeHtml(str){
+    return String(str)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  // Grade badges
+  function gradeBadge(level) {
+    if (!level) return `<span class="badge badge-neutral">N/A</span>`;
+    const L = String(level).toUpperCase();
+    if (L === "NO_KEYWORDS_DEFINED") return `<span class="badge badge-incorrect">INCORRECT</span>`;
+    if (L === "GOOD") return `<span class="badge badge-good">✅ GOOD</span>`;
+    if (L === "PARTIAL") return `<span class="badge badge-partial">⭐ PARTIAL</span>`;
+    if (L === "WEAK") return `<span class="badge badge-weak">⚠️ WEAK</span>`;
+    if (L === "INCORRECT") return `<span class="badge badge-incorrect">❌ INCORRECT</span>`;
+    return `<span class="badge badge-neutral">${escapeHtml(level)}</span>`;
+  }
+
+  function voiceBadge(label) {
+    if (!label) return "";
+    const L = String(label).toLowerCase();
+    if (L === "confident") return `<span class="voice-badge voice-confident">💚 Confident</span>`;
+    if (L === "hesitant") return `<span class="voice-badge voice-hesitant">💛 Hesitant</span>`;
+    if (L === "nervous") return `<span class="voice-badge voice-nervous">❤️ Nervous</span>`;
+    return `<span class="voice-badge">${escapeHtml(label)}</span>`;
+  }
+
+  // Recording flow
+  async function handleRecord(card) {
+    const btnRecord = card.querySelector(".btn-record");
+    const resultEl = card.querySelector(".result");
+
+    if (card.dataset.locked === "true") return;
+
+    if (isRecording && currentRecordingCard && currentRecordingCard !== card) {
+      alert("Another question is recording. Stop it first.");
+      return;
+    }
+
+    // stop
+    if (isRecording && currentRecordingCard === card) {
+      btnRecord.textContent = "⏳ Checking...";
+      btnRecord.disabled = true;
+      mediaRecorder.stop();
+      isRecording = false;
+      return;
+    }
+
+    // start
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert("Microphone recording not supported.");
+      return;
+    }
+
+    try {
+      if (!mediaStream) mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+      recordedChunks = [];
+      mediaRecorder = new MediaRecorder(mediaStream);
+      currentRecordingCard = card;
+      isRecording = true;
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data && event.data.size > 0) recordedChunks.push(event.data);
+      };
+
+      mediaRecorder.onstop = async () => {
+        // webm is fine; backend will decode via ffmpeg/whisper
+        const blob = new Blob(recordedChunks, { type: "audio/webm" });
+
+        const qid = card.dataset.questionId;
+        const formData = new FormData();
+        formData.append("question_id", qid);
+        formData.append("audio", blob, "recorded_answer.webm");
+
+        await gradeVoiceForCard(card, formData);
+
+        currentRecordingCard = null;
+        recordedChunks = [];
+
+        if (card.dataset.locked !== "true") {
+          btnRecord.disabled = false;
+          btnRecord.textContent = "🎙️ Record & Check";
+        }
+      };
+
+      mediaRecorder.start();
+
+      resultEl.style.display = "block";
+      resultEl.innerHTML = `<strong>Recording...</strong> Click again to stop and check.`;
+      btnRecord.textContent = "⏹ Stop & Check";
+
+    } catch (err) {
+      console.error(err);
+      alert("Could not start recording. Check mic permission.");
+      isRecording = false;
+      currentRecordingCard = null;
+    }
+  }
+
+  async function gradeVoiceForCard(card, formData) {
+    const resultEl = card.querySelector(".result");
+    const btnRecord = card.querySelector(".btn-record");
+
+    if (card.dataset.locked === "true") return;
+
+    btnRecord.disabled = true;
+    resultEl.style.display = "block";
+    resultEl.textContent = "Uploading and analyzing...";
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/grade-voice`, { method: "POST", body: formData });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      const grade = data.grade || {};
+      const voice = data.voice_confidence || {};
+      const ks = data.keyword_stats || {};
+
+      const level = grade.level || "N/A";
+      const marks = grade.marks != null ? grade.marks : "-";
+      const coveragePercent = ks.main_coverage_percent != null ? ks.main_coverage_percent : 0.0;
+
+      const voiceLabel = voice.predicted_label || "";
+      const probs = voice.probabilities || {};
+
+      let probsLines = "";
+      for (const [lab, p] of Object.entries(probs)) {
+        probsLines += `${escapeHtml(lab)}: ${(p * 100).toFixed(1)}% &nbsp; `;
+      }
+
+      const matched = (ks.main_matched || []).join(", ") || "none";
+
+      resultEl.innerHTML = `
+        <div>
+          <strong>Answer Grade:</strong> ${gradeBadge(level)}
+          <div class="small">Marks: <b>${marks}</b> / 10 &nbsp; • &nbsp; Keyword coverage: <b>${coveragePercent.toFixed(1)}%</b></div>
+        </div>
+
+        <div style="margin-top:8px;">
+          <strong>Voice Pattern:</strong> ${voiceBadge(voiceLabel)}
+          ${probsLines ? `<div class="small">Probabilities: ${probsLines}</div>` : ""}
+        </div>
+
+        <div class="small" style="margin-top:8px;">
+          Main keywords matched: <b>${escapeHtml(matched)}</b>
+        </div>
+      `;
+
+      card.dataset.locked = "true";
+      btnRecord.disabled = true;
+      btnRecord.textContent = "✅ Checked";
+
+    } catch (err) {
+      console.error(err);
+      resultEl.innerHTML = `<span style="color:#FF6B5B;font-weight:800;">Error while grading. Check server console.</span>`;
+      btnRecord.disabled = false;
+      btnRecord.textContent = "🎙️ Record & Check";
+    }
+  }
+</script>
+</body>
+</html>
